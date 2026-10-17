@@ -149,6 +149,9 @@
     <string name="concert_hall_intensity">Intensidad de la sala: %1$d%%</string>
     <string name="concert_hall">Sala de conciertos</string>
     <string name="concert_hall_subtitle">Reverberación de sala grande: la música suena como en un gran auditorio</string>
+    <string name="playback_speed">Velocidad de reproducción</string>
+    <string name="playback_speed_subtitle">Tempo de la canción — con velocidad y tono acoplados también cambia el tono</string>
+    <string name="playback_speed_value">%1$s×</string>
     <string name="speed_pitch_linked">Velocidad y tono juntos</string>
     <string name="speed_pitch_linked_subtitle">Bajar la velocidad también baja el tono, como un tocadiscos</string>
     <string name="spatial_audio_subtitle">Amplía las pistas estéreo para una experiencia más inmersiva</string>

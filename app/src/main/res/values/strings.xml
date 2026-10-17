@@ -201,6 +201,9 @@
     <string name="concert_hall_intensity">Hall intensity: %1$d%%</string>
     <string name="concert_hall">Concert hall</string>
     <string name="concert_hall_subtitle">Big-room reverb — the music plays as if in a large hall</string>
+    <string name="playback_speed">Playback speed</string>
+    <string name="playback_speed_subtitle">Tempo of the song — with speed and pitch linked it also changes the tone</string>
+    <string name="playback_speed_value">%1$s×</string>
     <string name="speed_pitch_linked">Speed and pitch together</string>
     <string name="speed_pitch_linked_subtitle">Slowing down also lowers the pitch, like a record player</string>
     <string name="spatial_audio_subtitle">Widens stereo tracks for a more immersive feel</string>

@@ -106,6 +106,7 @@ fun EqualizerScreen(
     val concertHall by AppSettings.concertHall.collectAsStateWithLifecycle()
     val hallIntensity by AppSettings.concertHallIntensity.collectAsStateWithLifecycle()
     val speedPitchLinked by AppSettings.speedPitchLinked.collectAsStateWithLifecycle()
+    val playbackSpeed by AppSettings.playbackSpeed.collectAsStateWithLifecycle()
     val outputStatus by AudioOutputStatus.current.collectAsStateWithLifecycle()
 
     val haptics = rememberHaptics()
@@ -306,6 +307,44 @@ fun EqualizerScreen(
                         valueRange = 0.25f..1f,
                     )
                 }
+            }
+            RowDivider()
+            // PlayBeat: la velocidad de la cancion, al alcance del mismo panel
+            // de efectos. Con el acople activo cambia tambien el tono; el
+            // valor exacto se lee en la etiqueta, y tocarla vuelve a 1.00×.
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+            ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { AppSettings.setPlaybackSpeed(1f) },
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = stringResource(R.string.playback_speed),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.playback_speed_value,
+                            "%.2f".format(java.util.Locale.ROOT, playbackSpeed),
+                        ),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+                Slider(
+                    value = playbackSpeed.coerceIn(0.25f, 2f),
+                    onValueChange = { snapped ->
+                        AppSettings.setPlaybackSpeed(snapped)
+                    },
+                    valueRange = 0.25f..2f,
+                    steps = 34,
+                )
             }
             RowDivider()
             SettingsRow(

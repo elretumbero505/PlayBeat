@@ -6624,9 +6624,19 @@ class PlaybackService : MediaLibraryService() {
         }
         scope.launch {
             AppSettings.spatialAudio.collect { applySpatialAudioEnabled() }
+        }
+        // PlayBeat: cada observador en su propia corrutina. Un collect de
+        // StateFlow nunca termina, asi que amontonarlos en un mismo launch
+        // dejaba a los de abajo inalcanzables — la sala se activaba en
+        // ajustes pero el procesador nunca se enteraba.
+        scope.launch {
             AppSettings.concertHall.collect { applyConcertHallEnabled() }
+        }
+        scope.launch {
             // PlayBeat: mover el slider de la sala reconfigura el reverb ya mismo.
             AppSettings.concertHallIntensity.collect { applyConcertHallEnabled() }
+        }
+        scope.launch {
             // PlayBeat: al acoplar o desacoplar velocidad y tono, el tempo
             // hay que reaplicarlo para que el tono cambie ya mismo.
             AppSettings.speedPitchLinked.collect {
