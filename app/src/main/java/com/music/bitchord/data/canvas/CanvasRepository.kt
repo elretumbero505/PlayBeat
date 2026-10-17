@@ -93,12 +93,14 @@ object CanvasRepository {
                 firstHit(
                     { SpotifyCanvas.search(title, artist, album) },
                     { AppleMusicCanvas.search(title, artist, album) },
+                    { AppleMotionCanvas.search(title, artist, album) },
                     { TidalCanvas.search(title, artist, album) },
                     { CommunityCanvas.search(title, artist, album) },
                 ) { it.matches(title, artist, album) }
             } else {
                 firstHit(
                     { AppleMusicCanvas.search(title, artist, album) },
+                    { AppleMotionCanvas.search(title, artist, album) },
                     { TidalCanvas.search(title, artist, album) },
                     { CommunityCanvas.search(title, artist, album) },
                     { SpotifyCanvas.search(title, artist, album) },
@@ -141,12 +143,14 @@ object CanvasRepository {
                 firstHit(
                     { SpotifyCanvas.searchAlbum(name, credit) },
                     { AppleMusicCanvas.searchAlbum(name, credit) },
+                    { AppleMotionCanvas.searchAlbum(name, credit) },
                     { TidalCanvas.searchAlbum(name, credit) },
                     { CommunityCanvas.searchAlbum(name, credit) },
                 ) { it.matches(name, credit, name) }
             } else {
                 firstHit(
                     { AppleMusicCanvas.searchAlbum(name, credit) },
+                    { AppleMotionCanvas.searchAlbum(name, credit) },
                     { TidalCanvas.searchAlbum(name, credit) },
                     { CommunityCanvas.searchAlbum(name, credit) },
                     { SpotifyCanvas.searchAlbum(name, credit) },
