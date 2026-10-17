@@ -167,6 +167,7 @@ import com.music.bitchord.ui.screens.HistoryScreen
 import com.music.bitchord.ui.screens.LibraryReplayEntry
 import com.music.bitchord.ui.screens.libraryDeviceItems
 import com.music.bitchord.ui.screens.SPOTIFY_BROWSE_ID
+import com.music.bitchord.ui.screens.HISTORY_BROWSE_ID
 import com.music.bitchord.ui.screens.libraryLinks
 import com.music.bitchord.ui.screens.CACHE_FOLDER_BROWSE_ID
 import com.music.bitchord.ui.screens.ListenTogetherScreen
@@ -2004,6 +2005,13 @@ private fun BitChordApp(
                 showSpotify = true
                 return@let
             }
+            // PlayBeat: la fila de Historial de la Biblioteca abre la pagina de
+            // historial — el mismo destino que tenia el boton de la barra.
+            if (id == HISTORY_BROWSE_ID) {
+                showHistory = true
+                viewModel.loadHistory()
+                return@let
+            }
             if ((id == "local:all" || id == "local:downloads") && !LocalMediaRepository.hasStoragePermission(context)) {
                 mediaPermissionLauncher.launch(mediaPermission)
             }
@@ -2196,9 +2204,6 @@ private fun BitChordApp(
     val replayOpen = showReplay || replayStory != null || showReplayShare ||
         (selectedTab == TAB_LIBRARY && detail == null && !showSettings)
     val (replay, setReplayPeriod) = rememberReplayState(replayOpen)
-    val replayCards = remember(replay.summary) {
-        replay.summary?.takeUnless { it.isEmpty }?.cards(context).orEmpty()
-    }
 
     // ---- The track in the player ----
     // Whatever started this track knew its title and its artwork, but rarely
@@ -3353,8 +3358,6 @@ private fun BitChordApp(
                             onShowAll = { shelf -> libraryShowAll = shelf },
                             replay = {
                                 LibraryReplayEntry(
-                                    cards = replayCards,
-                                    loading = replay.loading,
                                     holder = account?.name.orEmpty(),
                                     memberSince = replay.memberSince,
                                     onOpenReplay = { page ->
@@ -3663,6 +3666,15 @@ private fun BitChordApp(
                         }
                     } else null,
                     actions = {
+                        // PlayBeat: la Biblioteca en reposo no lleva nada en su
+                        // barra superior — ni historial ni foto de cuenta. "En
+                        // reposo" es la pantalla de la pestaña misma, no las
+                        // paginas que se abren sobre ella.
+                        val libraryAtRest = selectedTab == TAB_LIBRARY && detail == null &&
+                            selectedMoodGenre == null && libraryShowAll == null && !showSettings &&
+                            !showHistory && !showReplay && !showDiscord && !showSpotify &&
+                            !showListenTogether && !showWearOs && !showEqualizer &&
+                            !showAccountScrobbling && !showSources
                         // This is intentionally scoped to Listen together: the
                         // round-trip time is meaningful while coordinating a
                         // party, but would be noise in the rest of the app.
@@ -3743,25 +3755,14 @@ private fun BitChordApp(
                             }
                         }
                         if (!showSettings && !showAccountScrobbling) {
-                            // Left of the account photo, and only on Library itself:
-                            // a history is a record of what was played, which reads
-                            // as that tab's business rather than every tab's.
-                            if (!showHistory && !showReplay && !showDiscord && libraryShowAll == null &&
-                                detail == null && selectedTab == TAB_LIBRARY
-                            ) {
-                                IconButton(
-                                    onClick = {
-                                        showHistory = true
-                                        viewModel.loadHistory()
-                                    },
-                                ) {
-                                    Icon(
-                                        Icons.Rounded.History,
-                                        contentDescription = stringResource(R.string.listening_history),
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                }
-                            }
+                            // PlayBeat: el historial ya no tiene boton en la
+                            // Biblioteca — esa barra queda limpia, sin el reloj ni
+                            // la foto de cuenta. La puerta del historial ahora es
+                            // su fila en la lista de la Biblioteca, junto a
+                            // Descargas y Musica local; la racha del encabezado
+                            // es la que habla de lo escuchado. (Véase
+                            // [libraryAtRest], mas abajo: la foto de cuenta
+                            // tambien se esconde en reposo.)
                             // Left of the account photo, and only on a Library
                             // "Show all" grid — the same control the Downloads
                             // folder offers (see `LocalSearchField`), adapted to
@@ -3901,8 +3902,10 @@ private fun BitChordApp(
                             TopBarDownloadButton(onClick = { showDownloadManager = true })
                             // Not on a release page, whose pill already carries
                             // three of its own controls — Apple Music leaves the
-                            // profile off its album pages too.
-                            if (!isReleaseDetail) TopBarAccountButton(
+                            // profile off its album pages too. Nor on the Library
+                            // page at rest: its top bar is bare on purpose, and
+                            // the streak card is what fronts it.
+                            if (!isReleaseDetail && !libraryAtRest) TopBarAccountButton(
                                 account = account,
                                 onClick = {
                                     if (signedIn) {

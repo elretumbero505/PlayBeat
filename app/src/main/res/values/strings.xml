@@ -722,6 +722,8 @@
     <string name="listening_shape">Your listening pattern</string>
     <string name="member_since">Member since</string>
     <string name="member_since_value">Member since %1$s</string>
+    <string name="streak_title">Listening streak</string>
+    <string name="streak_days_label">day streak</string>
     <string name="midday">midday</string>
     <string name="midnight">midnight</string>
     <string name="minutes">Minutes</string>

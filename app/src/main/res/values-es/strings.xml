@@ -534,6 +534,8 @@
     <string name="listening_shape">Tus hábitos de reproducción</string>
     <string name="member_since">Miembro desde</string>
     <string name="member_since_value">Miembro desde %1$s</string>
+    <string name="streak_title">Racha musical</string>
+    <string name="streak_days_label">días de racha</string>
     <string name="midday">mediodía</string>
     <string name="midnight">medianoche</string>
     <string name="minutes">Minutos</string>

@@ -351,6 +351,33 @@ object ListeningStats {
         }
     }
 
+    /**
+     * PlayBeat: la racha — cuántos días seguidos, terminando en hoy (o en
+     * ayer, si hoy todavía no ha sonado nada), tienen algo de escucha
+     * registrada. Los días salen de los mismos bucket mensuales que Replay:
+     * un día cuenta con que haya entrado cualquier escucha, no una
+     * reproducción completa.
+     */
+    suspend fun streakDays(): Int = withContext(Dispatchers.IO) {
+        flushAndAwait()
+        val days = HashSet<LocalDate>()
+        months().forEach { month ->
+            read(month.toString())?.let { bucket ->
+                bucket.trackDays.keys.forEach { key ->
+                    runCatching { LocalDate.parse(key) }.getOrNull()?.let(days::add)
+                }
+            }
+        }
+        var cursor = LocalDate.now()
+        if (cursor !in days) cursor = cursor.minusDays(1)
+        var streak = 0
+        while (cursor in days) {
+            streak++
+            cursor = cursor.minusDays(1)
+        }
+        streak
+    }
+
     /** Every month with a file, oldest first. */
     fun months(): List<YearMonth> {
         if (!ready) return emptyList()
